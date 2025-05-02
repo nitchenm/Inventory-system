@@ -32,7 +32,9 @@ public class Category {
     private List<Product> products;
 
     public void setId(Long id) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        this.id = id;
     }
+
+   
 
 }

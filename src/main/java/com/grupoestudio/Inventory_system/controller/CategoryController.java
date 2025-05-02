@@ -17,8 +17,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.grupoestudio.Inventory_system.model.Category;
 import com.grupoestudio.Inventory_system.service.CategoryService;
 
-import org.springframework.web.bind.annotation.RequestParam;
-
 
 @RestController
 @RequestMapping("/api/v1/categories")
