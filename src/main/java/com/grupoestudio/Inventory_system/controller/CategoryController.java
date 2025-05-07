@@ -12,10 +12,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.grupoestudio.Inventory_system.model.Category;
 import com.grupoestudio.Inventory_system.service.CategoryService;
+
 
 
 @RestController
@@ -72,6 +74,45 @@ public class CategoryController {
             return ResponseEntity.notFound().build();
         }
     }
+
+    @GetMapping("/{id}/low-stock")
+    public ResponseEntity<Boolean> lowStockCheck(@PathVariable Long id, @RequestParam int minStock) {
+        try {
+            categoryService.hasLowStock(id, minStock);
+            return ResponseEntity.ok().build();
+        } catch (Exception e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @GetMapping("/{id}/deactivate-low-stock")
+    public ResponseEntity<Void> deactivateLowStock(@PathVariable Long id, @RequestParam int minStock) {
+        try{
+            categoryService.deactivateProductByStock(id, minStock);
+            return ResponseEntity.ok().build();
+        }  catch (Exception e) {
+            return ResponseEntity.notFound().build();
+        }
+        
+    }
+
+    @GetMapping("/{sourceid}/reassign/{targetid}")
+    public ResponseEntity<Void> reassignProducts(@PathVariable Long sourceid, @PathVariable Long targetid){
+        try {
+            categoryService.reassignProductsToCategory(sourceid, targetid);
+            return ResponseEntity.ok().build();
+        } catch (Exception e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+    
+    @GetMapping("")
+    public String getMethodName(@RequestParam String param) {
+        return new String();
+    }
+    
+    
+    
 
     
 }

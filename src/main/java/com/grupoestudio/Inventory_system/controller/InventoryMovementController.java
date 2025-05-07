@@ -7,8 +7,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -33,7 +33,7 @@ public class InventoryMovementController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<InventoryMovement> getById(@RequestParam Long id) {
+    public ResponseEntity<InventoryMovement> getById(@PathVariable Long id) {
         try {
             InventoryMovement invMov = invMovService.findById(id);
             return ResponseEntity.ok(invMov);
@@ -43,7 +43,7 @@ public class InventoryMovementController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteInv(@RequestParam Long id){
+    public ResponseEntity<Void> deleteInv(@PathVariable Long id){
        try {
             invMovService.deleteById(id);
             return ResponseEntity.noContent().build();
@@ -53,7 +53,7 @@ public class InventoryMovementController {
     }
 
     @PostMapping
-    public ResponseEntity<InventoryMovement> saveInvMov(@RequestBody InventoryMovement invMov) {
+    public ResponseEntity<InventoryMovement> saveInvMov(@PathVariable InventoryMovement invMov) {
         try {
             InventoryMovement invToSave = invMovService.save(invMov);
             return ResponseEntity.status(HttpStatus.CREATED).body(invToSave);
@@ -63,7 +63,7 @@ public class InventoryMovementController {
     }
 
     @GetMapping("/{sourceid}/transfer-stock/{targetid}")
-    public ResponseEntity<Void> transferStock(@RequestParam Long sourceid, @RequestParam Long targetid, int quantity) {
+    public ResponseEntity<Void> transferStock(@PathVariable Long sourceid, @RequestParam Long targetid, int quantity) {
         try {
             invMovService.transferStock(sourceid, targetid, quantity);
             return ResponseEntity.ok().build();
