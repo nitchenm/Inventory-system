@@ -31,4 +31,17 @@ public class ProductService {
     public void deleteProduct(Long id){
         productRepository.deleteById(id);
     }
+
+    //VALOR FINAL A LA CANTIDAD POR EL PRECIO DEL PRODUCTO 
+
+    //obtener el producto, su precio y cantidad
+    //precio * cantidad = valor total = retornar el valor total 
+
+    public double calculateTotalValue(Long id){
+        Product product = productRepository.findById(id).get();
+        return product.getPrice() * product.getStock();
+
+    }
+
+
 }

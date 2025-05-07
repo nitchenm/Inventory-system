@@ -31,7 +31,7 @@ public class InventoryMovement {
     private int quantity;
 
     @Column(nullable=false)
-    private String type;
+    private String type; // "ENTRADA", "SALIDA", "AJUSTE"
 
     @Column(nullable=false)
     private Date date;
@@ -46,6 +46,17 @@ public class InventoryMovement {
 
     public int getQuantity() {
         return quantity;
+    }
+
+    public void setProduct(Product product){
+        this.product = product;
+    }
+
+    public void createInvMov(Product product, int quantity, String type){
+        this.product = product;
+        this.quantity = quantity;
+        this.type = type;
+        this.date = new Date();
     }
 
 

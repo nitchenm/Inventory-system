@@ -37,38 +37,48 @@ public class InventoryMovementService {
 
     public InventoryMovement save(InventoryMovement invMov){
         Product product = productRepository.findById(invMov.getProduct().getId()).get();
-        if (product != null){
-            //Product productAsociado = invMov.getProduct();
-            //Long idProductoAsociado = productAsociado.getId();
-            //Product productoAsociadoFinal = productRepository.findById(idProductoAsociado).get();
-            //Product product1 = productRepository.findById(idProducto).get();
-            //Queremos saber el stock del producto que queremos mover 
-            //Hacemos una variable local
-            //¿Como llego al producto asociado a mi columna de movimientoInventario?
-            //Hago mi variable product
-            //invMov.getProduct() == product
-            //product.getId() = 5
-            //productRepository.findById()
-            //invMov tenemos un producto asociado cual es su id? 
-            //invMov.getProduct().getId()
-            //productRepository.findById()
-            int currentStock = product.getStock();
-            if ( invMov.getType().equals("ENTRADA")){
-                product.setStock(currentStock + invMov.getQuantity());
-            } else if (invMov.getType().equals("SALIDA")){
-                if (currentStock < invMov.getQuantity()){
-                    throw new RuntimeException("Insufficient stock for product: " + product.getName());
-                }
-                product.setStock(currentStock - invMov.getQuantity());
+       
+        int currentStock = product.getStock();
+        if ( invMov.getType().equals("ENTRADA")){
+            product.setStock(currentStock + invMov.getQuantity());
+        } else if (invMov.getType().equals("SALIDA")){
+            if (currentStock < invMov.getQuantity()){
+                throw new RuntimeException("Insufficient stock for product: " + product.getName());
             }
-
-            productRepository.save(product);
-
-            return inventoryMovementRepository.save(invMov);
+            product.setStock(currentStock - invMov.getQuantity());
         }
-        throw new RuntimeException("No se encontro el id del producto");
+        productRepository.save(product);
+
+        return inventoryMovementRepository.save(invMov);
+      
     }
 
-    //save ---> Cambiar el stock del producto dependiendo del tipo de movimiento ("ENTRADA" O "SALIDA"),
-    // guardar mi producto (con su nuevo stock), guardar mi movimientoInventario.
+    
+    
+    //Id del producto fuente, Id del producto destino, cantidad
+    //Metodo de transferencia (id producto fuente, id producto destino, cantidad)
+    public void transferStock (Long idSourceProduct, Long idTargetProduct, int quantity){
+        Product sourceProduct = productRepository.findById(idSourceProduct).orElseThrow(()-> new RuntimeException("Source product not found"));
+        Product targetProduct = productRepository.findById(idTargetProduct).orElseThrow(()-> new RuntimeException("Target product not found"));
+       
+        if ( sourceProduct.getStock() < quantity){
+            throw new RuntimeException("Not enough stock in the source product.");
+        }
+
+        //Crear movimiento salida para el producto fuente
+        InventoryMovement exitMovement = new InventoryMovement();
+        exitMovement.createInvMov(targetProduct, quantity, "SALIDA");
+        sourceProduct.setStock(sourceProduct.getStock() - quantity);
+        
+        //Crear movimiento entrada para el producto destino
+        InventoryMovement entryMovement = new InventoryMovement();
+        entryMovement.createInvMov(targetProduct, quantity, "ENTRADA");
+        targetProduct.setStock(targetProduct.getStock() + quantity);
+
+        //Guardar productos y movimientos 
+        productRepository.save(sourceProduct);
+        productRepository.save(targetProduct);
+        inventoryMovementRepository.save(entryMovement);
+        inventoryMovementRepository.save(exitMovement);
+    }
 }
