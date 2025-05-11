@@ -27,7 +27,6 @@ public class CategoryController {
     @Autowired
     private CategoryService categoryService;
 
-
     @GetMapping
     //Todo controlador tiene que tener una respuesta de tipo ResponseEntity(respuestas http 200 ok 404 not found)
     //cabecera : respuesta 404 202 400 body : List<Category>   :   
@@ -96,23 +95,26 @@ public class CategoryController {
         
     }
 
-    @GetMapping("/{sourceid}/reassign/{targetid}")
-    public ResponseEntity<Void> reassignProducts(@PathVariable Long sourceid, @PathVariable Long targetid){
+    @GetMapping("/{id}/reassign")
+    public ResponseEntity<Void> reassignProducts(@PathVariable Long id, @RequestParam Long targetid){
         try {
-            categoryService.reassignProductsToCategory(sourceid, targetid);
+            categoryService.reassignProductsToCategory(id, targetid);
+            return ResponseEntity.ok().build();
+        } catch (Exception e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @GetMapping("/{id}/increment-price")
+    public ResponseEntity<Void> incrementPrice(@PathVariable Long id, @RequestParam double percentage){
+        try {
+            categoryService.setPriceByPercentage(id, percentage);
             return ResponseEntity.ok().build();
         } catch (Exception e) {
             return ResponseEntity.notFound().build();
         }
     }
     
-    @GetMapping("")
-    public String getMethodName(@RequestParam String param) {
-        return new String();
-    }
-    
-    
-    
-
     
 }
+

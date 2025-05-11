@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.grupoestudio.Inventory_system.model.InventoryMovement;
@@ -63,7 +62,7 @@ public class InventoryMovementController {
     }
 
     @GetMapping("/{sourceid}/transfer-stock/{targetid}")
-    public ResponseEntity<Void> transferStock(@PathVariable Long sourceid, @RequestParam Long targetid, int quantity) {
+    public ResponseEntity<Void> transferStock(@PathVariable Long sourceid, @PathVariable Long targetid, int quantity) {
         try {
             invMovService.transferStock(sourceid, targetid, quantity);
             return ResponseEntity.ok().build();
@@ -72,5 +71,5 @@ public class InventoryMovementController {
         }
     }
     
-
+    
 }
